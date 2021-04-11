@@ -23,6 +23,9 @@ function init() {
 	document.body.appendChild( renderer.domElement );
 
 	scene = new THREE.Scene();
+	// Create axesHelper
+	var axes = new THREE.AxesHelper(250);
+	scene.add(axes);
 
 	camera = new THREE.PerspectiveCamera(55,window.innerWidth/window.innerHeight, 1, 2000);
 	camera.position.set(30,30,100);
