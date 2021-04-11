@@ -3,7 +3,8 @@ import { Sky } from '../node_modules/three/examples/jsm/objects/Sky.js';
 import Stats from '../node_modules/three/examples/jsm/libs/stats.module.js';
 import { OrbitControls } from '../node_modules/three/examples/jsm/controls/OrbitControls.js';
 
-let scene, camera, renderer, water, sun, mesh, controls, stats;
+let scene, camera, renderer, water, sun, mesh, controls, stats, object1,object2,object3;
+
 
 function init() {
 
@@ -22,6 +23,69 @@ function init() {
 	renderer.setPixelRatio( window.devicePixelRatio );
 	document.body.appendChild( renderer.domElement );
 
+	function loadModel() {
+		object1.traverse( function ( child ) {
+			if ( child.isMesh ) { child.material.map = texture }
+
+			//adjust these parameters to scale or more the island
+			object1.position.y  = -1.2;
+			object1.scale.set(20,20,20);
+		});
+		object2.traverse( function ( child1 ) {
+			if ( child1.isMesh ) { child1.material.map = texture }
+			// adjust these parameters to scale or move the first tree
+			object2.position.y  = 0;
+			object2.position.z = -6;
+			object2.scale.set(0.025,0.025,0.025);
+		});
+		object3.traverse( function ( child1 ) {
+			if ( child1.isMesh ) { child1.material.map = texture }
+			// adjust these parameters to scale or move the second tree
+			object3.position.y  = 0;
+			object3.position.z = 6;
+			object3.rotation.y = 35;
+			object3.rotation.z = Math.PI/90;
+			object3.scale.set(0.025,0.025,0.025);
+		});
+	}
+
+	var manager = new THREE.LoadingManager( loadModel );
+	manager.onProgress = function ( item, loaded, total ) {
+		console.log( item, loaded, total );
+	};
+
+	var textureLoader = new THREE.TextureLoader( manager );
+	var texture = textureLoader.load( 'models/sand.jpg' );
+
+	function onProgress( xhr ) {
+		if ( xhr.lengthComputable ) {
+			var percentComplete = xhr.loaded / xhr.total * 100;
+			console.log( 'model ' + Math.round( percentComplete, 2 ) + '% downloaded' );
+		}
+	}
+
+
+	function onError() {}
+	// these are the function for loading
+	var loader = new THREE.OBJLoader( manager );
+	loader.load( 'models/island.obj',
+		function ( obj ) {
+			object1 = obj;
+		},
+		onProgress, onError );
+	// this loads the island model
+	loader.load('models/efha6kh63bla.obj',
+		function(obj1) {
+			object2 = obj1;
+		},
+		onProgress, onError);
+	// this loads the first tree
+	loader.load('models/efha6kh63bla.obj',
+		function(obj2) {
+			object3 = obj2;
+		},
+		onProgress, onError);
+	// this loads the second tree
 	scene = new THREE.Scene();
 	// Create axesHelper
 	var axes = new THREE.AxesHelper(250);
@@ -42,7 +106,7 @@ function init() {
 		{
 			textureWidth: 512,
 			textureHeight: 512,
-			waterNormals: new THREE.TextureLoader().load( '../node_modules/three/examples/jsm/textures/waternormals.jpg', function ( texture ) {
+			waterNormals: new THREE.TextureLoader().load( './examples/jsm/textures/waternormals.jpg', function ( texture ) {
 
 				texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
 
@@ -66,17 +130,19 @@ function init() {
 	scene.add( sky );
 
 	const skyUniforms = sky.material.uniforms;
-	skyUniforms[ 'turbidity' ].value = 1;
-	skyUniforms[ 'rayleigh' ].value = 0.15;
+
+	skyUniforms[ 'turbidity' ].value = 10;
+	skyUniforms[ 'rayleigh' ].value = 2;
 	skyUniforms[ 'mieCoefficient' ].value = 0.005;
-	skyUniforms[ 'mieDirectionalG' ].value = 0.1;
+	skyUniforms[ 'mieDirectionalG' ].value = 0.8;
 
 	const parameters = {
-		inclination: 0.3,
-		azimuth: 0.55
+		inclination: 0.49,
+		azimuth: 0.205
 	};
 
 	const pmremGenerator = new THREE.PMREMGenerator( renderer );
+
 
 
 	const theta = Math.PI * ( parameters.inclination - 0.5 );
@@ -115,8 +181,8 @@ function init() {
 
 
 	window.addEventListener( 'resize', onResize );
-}
 
+}
 function onResize() {
 
 	// Modify camera to keep aspect ratio
@@ -137,11 +203,13 @@ function animate() {
 
 function render() {
 
-
+	setTimeout(function(){scene.add(object1);},1000);
+	setTimeout(function(){scene.add(object2);},1000);
+	setTimeout(function(){scene.add(object3);},1000);
 	water.material.uniforms[ 'time' ].value += 1.0 / 60.0;
 	renderer.render( scene, camera );
 
 }
-window.onload = init;
+window.onload = init();
 window.onload = animate();
 window.addEventListener( 'resize', onResize, true );
