@@ -66,36 +66,30 @@ function init() {
 	scene.add( sky );
 
 	const skyUniforms = sky.material.uniforms;
-
-	skyUniforms[ 'turbidity' ].value = 10;
-	skyUniforms[ 'rayleigh' ].value = 2;
+	skyUniforms[ 'turbidity' ].value = 1;
+	skyUniforms[ 'rayleigh' ].value = 0.15;
 	skyUniforms[ 'mieCoefficient' ].value = 0.005;
-	skyUniforms[ 'mieDirectionalG' ].value = 0.8;
+	skyUniforms[ 'mieDirectionalG' ].value = 0.1;
 
 	const parameters = {
-		inclination: 0.49,
-		azimuth: 0.205
+		inclination: 0.3,
+		azimuth: 0.55
 	};
 
 	const pmremGenerator = new THREE.PMREMGenerator( renderer );
 
-	function updateSun() {
 
-		const theta = Math.PI * ( parameters.inclination - 0.5 );
-		const phi = 2 * Math.PI * ( parameters.azimuth - 0.5 );
+	const theta = Math.PI * ( parameters.inclination - 0.5 );
+	const phi = -3 * Math.PI * ( parameters.azimuth - 0.5 );
 
-		sun.x = Math.cos( phi );
-		sun.y = Math.sin( phi ) * Math.sin( theta );
-		sun.z = Math.sin( phi ) * Math.cos( theta );
+	sun.x = Math.cos( phi );
+	sun.y = Math.sin( phi ) * Math.sin( theta );
+	sun.z = Math.sin( phi ) * Math.cos( theta );
 
-		sky.material.uniforms[ 'sunPosition' ].value.copy( sun );
-		water.material.uniforms[ 'sunDirection' ].value.copy( sun ).normalize();
+	sky.material.uniforms[ 'sunPosition' ].value.copy( sun );
+	water.material.uniforms[ 'sunDirection' ].value.copy( sun ).normalize();
 
-		scene.environment = pmremGenerator.fromScene( sky ).texture;
-
-	}
-
-	updateSun();
+	scene.environment = pmremGenerator.fromScene( sky ).texture;
 
 	//
 
