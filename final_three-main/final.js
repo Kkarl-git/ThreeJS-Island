@@ -1,9 +1,9 @@
-import { Water } from '../node_modules/three/examples/jsm/objects/Water.js';
-import { Sky } from '../node_modules/three/examples/jsm/objects/Sky.js';
-import Stats from '../node_modules/three/examples/jsm/libs/stats.module.js';
-import { OrbitControls } from '../node_modules/three/examples/jsm/controls/OrbitControls.js';
+import { Water } from './examples/jsm/objects/Water.js';
+import { Sky } from './examples/jsm/objects/Sky.js';
+import Stats from './examples/jsm/libs/stats.module.js';
+import { OrbitControls } from './examples/jsm/controls/OrbitControls.js';
 
-let scene, camera, renderer, water, sun, mesh, controls, stats, object1,object2,object3;
+let scene, camera, renderer, water, sun, mesh, controls, stats, object1,object2,object3,object4,object5,object6;
 
 
 function init() {
@@ -33,19 +33,37 @@ function init() {
 		});
 		object2.traverse( function ( child1 ) {
 			if ( child1.isMesh ) { child1.material.map = texture }
-			// adjust these parameters to scale or move the first tree
 			object2.position.y  = 0;
 			object2.position.z = -6;
 			object2.scale.set(0.025,0.025,0.025);
 		});
 		object3.traverse( function ( child1 ) {
 			if ( child1.isMesh ) { child1.material.map = texture }
-			// adjust these parameters to scale or move the second tree
 			object3.position.y  = 0;
 			object3.position.z = 6;
 			object3.rotation.y = 35;
 			object3.rotation.z = Math.PI/90;
 			object3.scale.set(0.025,0.025,0.025);
+		});
+		object4.traverse( function ( child1 ) {
+			if ( child1.isMesh ) { child1.material.map = texture }
+			object4.position.y  = 5;
+			object4.position.z = -6;
+			object4.scale.set(3,3,3);
+		});
+		object5.traverse( function ( child1 ) {
+			if ( child1.isMesh ) { child1.material.map = texture }
+			object5.position.y  = 0;
+			object5.position.x =-55;
+
+			object5.scale.set(3,3,3);
+		});
+		object6.traverse( function ( child1 ) {
+			if ( child1.isMesh ) { child1.material.map = texture }
+			object6.position.y  = 10;
+			object6.position.x = 5;
+
+			object6.scale.set(10,10,10);
 		});
 	}
 
@@ -66,26 +84,41 @@ function init() {
 
 
 	function onError() {}
-	// these are the function for loading
+
 	var loader = new THREE.OBJLoader( manager );
+
 	loader.load( 'models/island.obj',
 		function ( obj ) {
 			object1 = obj;
+			scene.add(object1);
 		},
 		onProgress, onError );
-	// this loads the island model
+
 	loader.load('models/efha6kh63bla.obj',
 		function(obj1) {
 			object2 = obj1;
 		},
 		onProgress, onError);
-	// this loads the first tree
 	loader.load('models/efha6kh63bla.obj',
 		function(obj2) {
 			object3 = obj2;
 		},
 		onProgress, onError);
-	// this loads the second tree
+	loader.load('models/Bush1.obj',
+		function(obj3) {
+			object4 = obj3;
+		},
+		onProgress, onError);
+	loader.load('models/boat.obj',
+		function(obj4) {
+			object5 = obj4;
+		},
+		onProgress, onError);
+	loader.load('models/model.obj',
+		function(obj5) {
+			object6 = obj5;
+		},
+		onProgress, onError);
 	scene = new THREE.Scene();
 	// Create axesHelper
 	var axes = new THREE.AxesHelper(250);
@@ -202,11 +235,12 @@ function animate() {
 }
 
 function render() {
-
-	setTimeout(function(){scene.add(object1);},1000);
 	setTimeout(function(){scene.add(object2);},1000);
 	setTimeout(function(){scene.add(object3);},1000);
-	water.material.uniforms[ 'time' ].value += 1.0 / 60.0;
+	setTimeout(function(){scene.add(object4);},1000);
+	setTimeout(function(){scene.add(object5);},1000);
+	setTimeout(function(){scene.add(object6);},1000);
+	water.material.uniforms[ 'time' ].value += 1.0 / 500.0;
 	renderer.render( scene, camera );
 
 }
