@@ -1,0 +1,27 @@
+# File produced by Open Asset Import Library (http://www.assimp.sf.net)
+# (assimp v5.0.639693989)
+
+newmtl Cononute_tree-Leafs
+Kd 0.5626058 0.60705876 0.20278199
+Ka 0.2 0.2 0.2
+Ks 1 1 1
+Ke 0 0 0
+Tf 0 0 0
+d 1
+Ns 255.99998
+illum 2
+map_Kd imported_images/Coconut_tree_leaf.jpg
+
+newmtl Coconut_tree-Trunk
+Kd 0.48000002 0.48000002 0.48000002
+Ka 0.2 0.2 0.2
+Ks 1 1 1
+Ke 0 0 0
+Tf 0 0 0
+d 1
+Ns 256
+illum 2
+map_Kd imported_images/coconut-tree-trunk-C.jpg
+bump imported_images/coconut-tree-trunk-N.jpg
+map_bump imported_images/coconut-tree-trunk-N.jpg
+
